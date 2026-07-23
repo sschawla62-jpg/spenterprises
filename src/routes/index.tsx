@@ -179,11 +179,10 @@ function Home() {
           {featured.map((p) => {
             const off = p.mrp ? Math.round(((p.mrp - p.price) / p.mrp) * 100) : 0;
             return (
-              <a
+              <Link
                 key={p.id}
-                href={waLink(`Hi, I'm interested in ${p.name}. Please share details.`)}
-                target="_blank"
-                rel="noopener noreferrer"
+                to="/product/$id"
+                params={{ id: p.id }}
                 className="flex flex-col rounded-2xl bg-card border overflow-hidden shadow-sm active:scale-[0.99] transition"
               >
                 <div className="relative aspect-square bg-muted">
@@ -219,7 +218,7 @@ function Home() {
                     )}
                   </div>
                 </div>
-              </a>
+              </Link>
             );
           })}
         </div>

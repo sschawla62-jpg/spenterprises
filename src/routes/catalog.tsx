@@ -134,11 +134,10 @@ function Catalog() {
             {filtered.map((p) => {
               const off = p.mrp ? Math.round(((p.mrp - p.price) / p.mrp) * 100) : 0;
               return (
-                <a
+                <Link
                   key={p.id}
-                  href={waLink(`Hi, I'd like details on ${p.name} (₹${p.price}).`)}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  to="/product/$id"
+                  params={{ id: p.id }}
                   className="group flex flex-col rounded-2xl bg-card border overflow-hidden shadow-sm active:scale-[0.99] transition"
                 >
                   <div className="relative aspect-square bg-muted">
@@ -180,7 +179,7 @@ function Catalog() {
                       )}
                     </div>
                   </div>
-                </a>
+                </Link>
               );
             })}
           </div>
