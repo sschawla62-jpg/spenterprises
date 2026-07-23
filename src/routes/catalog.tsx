@@ -179,7 +179,7 @@ function Catalog() {
                       )}
                     </div>
                   </div>
-                </a>
+                </Link>
               );
             })}
           </div>
