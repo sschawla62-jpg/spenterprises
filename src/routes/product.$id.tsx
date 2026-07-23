@@ -128,7 +128,7 @@ function ProductPage() {
           </div>
           {p.gallery.length > 1 && (
             <div className="flex gap-2 p-3 overflow-x-auto no-scrollbar">
-              {p.gallery.map((src, i) => (
+              {p.gallery.map((src: string, i: number) => (
                 <button
                   key={i}
                   onClick={() => setActive(i)}
@@ -205,7 +205,7 @@ function ProductPage() {
             Key features
           </h2>
           <ul className="mt-3 space-y-2">
-            {p.features.map((f) => (
+            {p.features.map((f: string) => (
               <li key={f} className="flex items-start gap-2 text-sm">
                 <span className="mt-0.5 inline-flex items-center justify-center w-5 h-5 rounded-full bg-accent/40">
                   <Check className="w-3 h-3 text-primary" />
@@ -222,7 +222,7 @@ function ProductPage() {
             Specifications
           </h2>
           <div className="mt-3 rounded-2xl border bg-card overflow-hidden">
-            {p.specs.map((s, i) => (
+            {p.specs.map((s: { label: string; value: string }, i: number) => (
               <div
                 key={s.label}
                 className={`flex justify-between px-4 py-3 text-sm ${
@@ -242,7 +242,7 @@ function ProductPage() {
             What's in the box
           </h2>
           <div className="mt-3 flex flex-wrap gap-2">
-            {p.inBox.map((item) => (
+            {p.inBox.map((item: string) => (
               <span
                 key={item}
                 className="text-xs font-medium px-3 py-1.5 rounded-full bg-secondary text-secondary-foreground border"
