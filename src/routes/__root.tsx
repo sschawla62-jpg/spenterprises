@@ -77,14 +77,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "S P Enterprises — Small Appliances in Kanpur | Sujata, Havells, Prestige" },
+      { name: "description", content: "Shop mixer grinders, induction cooktops, kettles & more from Sujata, Havells & Prestige at S P Enterprises, R K Nagar, Kanpur. Call or WhatsApp 7275336699." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "S P Enterprises — Small Appliances in Kanpur | Sujata, Havells, Prestige" },
+      { property: "og:description", content: "Shop mixer grinders, induction cooktops, kettles & more from Sujata, Havells & Prestige at S P Enterprises, R K Nagar, Kanpur. Call or WhatsApp 7275336699." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "S P Enterprises — Small Appliances in Kanpur | Sujata, Havells, Prestige" },
+      { name: "twitter:description", content: "Shop mixer grinders, induction cooktops, kettles & more from Sujata, Havells & Prestige at S P Enterprises, R K Nagar, Kanpur. Call or WhatsApp 7275336699." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b4e2db65-27b2-4f70-85f4-586b3db6aad3/id-preview-8d033314--bb134cd5-26f5-4e87-8539-e6282f250cbd.lovable.app-1784796174868.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b4e2db65-27b2-4f70-85f4-586b3db6aad3/id-preview-8d033314--bb134cd5-26f5-4e87-8539-e6282f250cbd.lovable.app-1784796174868.png" },
     ],
     links: [
       {

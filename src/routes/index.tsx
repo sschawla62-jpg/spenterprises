@@ -14,11 +14,11 @@ export const Route = createFileRoute("/")({
         content:
           "Shop mixer grinders, induction cooktops, kettles & more from Sujata, Havells & Prestige at S P Enterprises, R K Nagar, Kanpur. Call or WhatsApp 7275336699.",
       },
-      { property: "og:title", content: "S P Enterprises — Small Appliances in Kanpur" },
+      { property: "og:title", content: "S P Enterprises — Small Appliances in Kanpur | Sujata, Havells, Prestige" },
       {
         property: "og:description",
         content:
-          "Trusted brands. Fair prices. Sujata, Havells, Prestige & more at S P Enterprises, Kanpur.",
+          "Shop mixer grinders, induction cooktops, kettles & more from Sujata, Havells & Prestige at S P Enterprises, R K Nagar, Kanpur. Call or WhatsApp 7275336699.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
