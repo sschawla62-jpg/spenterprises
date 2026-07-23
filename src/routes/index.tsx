@@ -1,16 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Phone, MessageCircle, MapPin, Star, Shield, Truck, BadgeCheck } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Phone, MessageCircle, MapPin, Star, Shield, Truck, BadgeCheck, ChevronRight } from "lucide-react";
 import hero from "@/assets/hero-appliances.jpg";
-import mixer from "@/assets/mixer.jpg";
-import induction from "@/assets/induction.jpg";
-import kettle from "@/assets/kettle.jpg";
+import { BUSINESS, CATEGORIES, PRODUCTS, telLink, waLink } from "@/lib/catalog";
 
-const PHONE = "7275336699";
-const WA = "917275336699";
-const WA_MSG = encodeURIComponent(
-  "Hi S P Enterprises, I'd like to know more about your small appliances.",
-);
-const ADDRESS = "110/43-A, R K Nagar, 80 Feet Road, Kanpur";
+const WA_MSG = "Hi S P Enterprises, I'd like to know more about your small appliances.";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -40,13 +33,8 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-const products = [
-  { name: "Sujata Mixer Grinders", tag: "Bestseller", img: mixer, price: "from ₹3,499" },
-  { name: "Havells Induction Cooktops", tag: "Energy Saver", img: induction, price: "from ₹2,199" },
-  { name: "Prestige Electric Kettles", tag: "New", img: kettle, price: "from ₹899" },
-];
-
 const brands = ["SUJATA", "HAVELLS", "PRESTIGE", "BAJAJ", "PHILIPS", "USHA"];
+const featured = PRODUCTS.slice(0, 4);
 
 function Home() {
   return (
@@ -56,14 +44,14 @@ function Home() {
         <div className="mx-auto max-w-md px-4 py-3 flex items-center justify-between">
           <div>
             <div className="text-lg font-extrabold tracking-tight text-primary leading-none">
-              S P Enterprises
+              {BUSINESS.name}
             </div>
             <div className="text-[11px] text-muted-foreground mt-0.5 flex items-center gap-1">
               <MapPin className="w-3 h-3" /> R K Nagar, Kanpur
             </div>
           </div>
           <a
-            href={`tel:+91${PHONE}`}
+            href={telLink()}
             aria-label="Call now"
             className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary text-primary-foreground shadow-md active:scale-95 transition"
           >
@@ -89,7 +77,7 @@ function Home() {
             </p>
             <div className="mt-4 flex gap-2">
               <a
-                href={`https://wa.me/${WA}?text=${WA_MSG}`}
+                href={waLink(WA_MSG)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-[color:var(--color-whatsapp)] text-[color:var(--color-whatsapp-foreground)] font-semibold py-3 text-sm shadow active:scale-[0.98] transition"
@@ -97,7 +85,7 @@ function Home() {
                 <MessageCircle className="w-4 h-4" /> WhatsApp
               </a>
               <a
-                href={`tel:+91${PHONE}`}
+                href={telLink()}
                 className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-accent text-accent-foreground font-semibold py-3 text-sm shadow active:scale-[0.98] transition"
               >
                 <Phone className="w-4 h-4" /> Call Now
@@ -129,6 +117,35 @@ function Home() {
         </div>
       </section>
 
+      {/* Shop by category */}
+      <section className="mx-auto max-w-md px-4 mt-8">
+        <div className="flex items-end justify-between">
+          <h2 className="text-xl font-extrabold">Shop by category</h2>
+          <Link
+            to="/catalog"
+            search={{ cat: "all" }}
+            className="text-xs font-semibold text-primary inline-flex items-center"
+          >
+            View all <ChevronRight className="w-3 h-3" />
+          </Link>
+        </div>
+        <div className="mt-4 grid grid-cols-4 gap-2">
+          {CATEGORIES.filter((c) => c.id !== "all").map((c) => (
+            <Link
+              key={c.id}
+              to="/catalog"
+              search={{ cat: c.id }}
+              className="flex flex-col items-center gap-1.5 rounded-2xl bg-card border p-3 active:scale-95 transition"
+            >
+              <span className="text-2xl leading-none">{c.emoji}</span>
+              <span className="text-[10px] font-semibold text-center leading-tight">
+                {c.label}
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* Brands */}
       <section className="mx-auto max-w-md px-4 mt-8">
         <h2 className="text-sm font-bold text-foreground/80 uppercase tracking-wider">
@@ -146,47 +163,65 @@ function Home() {
         </div>
       </section>
 
-      {/* Products */}
+      {/* Featured products */}
       <section className="mx-auto max-w-md px-4 mt-8">
         <div className="flex items-end justify-between">
           <h2 className="text-xl font-extrabold">Popular picks</h2>
-          <span className="text-xs text-muted-foreground">Tap to enquire</span>
+          <Link
+            to="/catalog"
+            search={{ cat: "all" }}
+            className="text-xs font-semibold text-primary inline-flex items-center"
+          >
+            See all <ChevronRight className="w-3 h-3" />
+          </Link>
         </div>
-        <div className="mt-4 grid grid-cols-1 gap-4">
-          {products.map((p) => (
-            <a
-              key={p.name}
-              href={`https://wa.me/${WA}?text=${encodeURIComponent(`Hi, I'm interested in ${p.name}. Please share details.`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex gap-3 rounded-2xl bg-card border p-3 shadow-sm active:scale-[0.99] transition"
-            >
-              <div className="w-24 h-24 rounded-xl overflow-hidden bg-muted flex-shrink-0">
-                <img
-                  src={p.img}
-                  alt={p.name}
-                  loading="lazy"
-                  width={800}
-                  height={800}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
-                <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
-                    {p.tag}
-                  </span>
-                  <h3 className="text-sm font-semibold leading-snug mt-0.5">{p.name}</h3>
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          {featured.map((p) => {
+            const off = p.mrp ? Math.round(((p.mrp - p.price) / p.mrp) * 100) : 0;
+            return (
+              <a
+                key={p.id}
+                href={waLink(`Hi, I'm interested in ${p.name}. Please share details.`)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col rounded-2xl bg-card border overflow-hidden shadow-sm active:scale-[0.99] transition"
+              >
+                <div className="relative aspect-square bg-muted">
+                  <img
+                    src={p.img}
+                    alt={p.name}
+                    loading="lazy"
+                    width={800}
+                    height={800}
+                    className="w-full h-full object-cover"
+                  />
+                  {off > 0 && (
+                    <span className="absolute top-2 right-2 text-[10px] font-bold bg-primary text-primary-foreground px-2 py-0.5 rounded-full">
+                      {off}% OFF
+                    </span>
+                  )}
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-bold text-foreground">{p.price}</span>
-                  <span className="inline-flex items-center gap-1 text-xs font-semibold text-[color:var(--color-whatsapp)]">
-                    <MessageCircle className="w-3.5 h-3.5" /> Enquire
-                  </span>
+                <div className="p-3 flex flex-col gap-1">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-primary">
+                    {p.brand}
+                  </div>
+                  <h3 className="text-[13px] font-semibold leading-snug line-clamp-2 min-h-[2.4em]">
+                    {p.name}
+                  </h3>
+                  <div className="mt-1 flex items-baseline gap-1.5">
+                    <span className="text-sm font-extrabold">
+                      ₹{p.price.toLocaleString("en-IN")}
+                    </span>
+                    {p.mrp && (
+                      <span className="text-[11px] text-muted-foreground line-through">
+                        ₹{p.mrp.toLocaleString("en-IN")}
+                      </span>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </a>
-          ))}
+              </a>
+            );
+          })}
         </div>
       </section>
 
@@ -194,11 +229,9 @@ function Home() {
       <section className="mx-auto max-w-md px-4 mt-8">
         <div className="rounded-2xl bg-card border p-5 shadow-sm">
           <h2 className="text-lg font-extrabold">Visit our store</h2>
-          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-            {ADDRESS}
-          </p>
+          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{BUSINESS.address}</p>
           <a
-            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("S P Enterprises " + ADDRESS)}`}
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(BUSINESS.name + " " + BUSINESS.address)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary"
@@ -207,7 +240,7 @@ function Home() {
           </a>
         </div>
         <p className="mt-6 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} S P Enterprises · Kanpur
+          © {new Date().getFullYear()} {BUSINESS.name} · Kanpur
         </p>
       </section>
 
@@ -218,7 +251,7 @@ function Home() {
       >
         <div className="mx-auto max-w-md px-4 py-3 flex gap-2">
           <a
-            href={`https://wa.me/${WA}?text=${WA_MSG}`}
+            href={waLink(WA_MSG)}
             target="_blank"
             rel="noopener noreferrer"
             className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-[color:var(--color-whatsapp)] text-[color:var(--color-whatsapp-foreground)] font-semibold py-3 text-sm shadow-lg active:scale-[0.98] transition"
@@ -226,7 +259,7 @@ function Home() {
             <MessageCircle className="w-5 h-5" /> WhatsApp
           </a>
           <a
-            href={`tel:+91${PHONE}`}
+            href={telLink()}
             className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground font-semibold py-3 text-sm shadow-lg active:scale-[0.98] transition"
           >
             <Phone className="w-5 h-5" /> Call Now
