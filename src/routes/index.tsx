@@ -1,24 +1,24 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Phone, MessageCircle, MapPin, Star, Shield, Truck, BadgeCheck, ChevronRight } from "lucide-react";
 import hero from "@/assets/hero-appliances.jpg";
-import { BUSINESS, CATEGORIES, PRODUCTS, telLink, waLink } from "@/lib/catalog";
+import { BUSINESS, CATEGORIES, telLink, waLink } from "@/lib/catalog";
 
 const WA_MSG = "Hi S P Enterprises, I'd like to know more about your small appliances.";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "S P Enterprises — Small Appliances in Kanpur | Sujata, Havells, Prestige" },
+      { title: "S P Enterprises — Small Appliances in Kanpur | Sujata, Prestige, Pigeon" },
       {
         name: "description",
         content:
-          "Shop mixer grinders, induction cooktops, kettles & more from Sujata, Havells & Prestige at S P Enterprises, R K Nagar, Kanpur. Call or WhatsApp 7275336699.",
+          "Shop juicer mixer grinders, inductions, kettles, mosquito rackets & room heaters from Sujata, Prestige, Pigeon and more at S P Enterprises, R K Nagar, Kanpur. Call or WhatsApp 7275336699.",
       },
-      { property: "og:title", content: "S P Enterprises — Small Appliances in Kanpur | Sujata, Havells, Prestige" },
+      { property: "og:title", content: "S P Enterprises — Small Appliances in Kanpur" },
       {
         property: "og:description",
         content:
-          "Shop mixer grinders, induction cooktops, kettles & more from Sujata, Havells & Prestige at S P Enterprises, R K Nagar, Kanpur. Call or WhatsApp 7275336699.",
+          "Small appliances from Sujata, Prestige, Pigeon, Oreva, Kelvinator and more at fair prices in Kanpur.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -33,8 +33,18 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-const brands = ["SUJATA", "HAVELLS", "PRESTIGE", "BAJAJ", "PHILIPS", "USHA"];
-const featured = PRODUCTS.slice(0, 4);
+const brands = [
+  "SUJATA",
+  "PRESTIGE",
+  "PIGEON",
+  "SKYLINE",
+  "OREVA",
+  "KELVINATOR",
+  "LICVE",
+  "MODERN",
+  "SNOW WHITE",
+  "ELECTROMAX",
+];
 
 function Home() {
   return (
@@ -73,7 +83,7 @@ function Home() {
               Big brands. Fair prices.
             </h1>
             <p className="mt-2 text-sm text-primary-foreground/85">
-              Sujata, Havells, Prestige & more — delivered fast across Kanpur.
+              Sujata, Prestige, Pigeon & more — delivered fast across Kanpur.
             </p>
             <div className="mt-4 flex gap-2">
               <a
@@ -123,24 +133,40 @@ function Home() {
           <h2 className="text-xl font-extrabold">Shop by category</h2>
           <Link
             to="/catalog"
-            search={{ cat: "all" }}
             className="text-xs font-semibold text-primary inline-flex items-center"
           >
             View all <ChevronRight className="w-3 h-3" />
           </Link>
         </div>
-        <div className="mt-4 grid grid-cols-4 gap-2">
-          {CATEGORIES.filter((c) => c.id !== "all").map((c) => (
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          {CATEGORIES.map((c) => (
             <Link
               key={c.id}
               to="/catalog"
               search={{ cat: c.id }}
-              className="flex flex-col items-center gap-1.5 rounded-2xl bg-card border p-3 active:scale-95 transition"
+              className="flex flex-col rounded-2xl bg-card border overflow-hidden shadow-sm active:scale-[0.99] transition"
             >
-              <span className="text-2xl leading-none">{c.emoji}</span>
-              <span className="text-[10px] font-semibold text-center leading-tight">
-                {c.label}
-              </span>
+              <div className="relative aspect-square bg-muted">
+                <img
+                  src={c.image}
+                  alt={c.label}
+                  loading="lazy"
+                  width={800}
+                  height={800}
+                  className="w-full h-full object-cover"
+                />
+                <span className="absolute top-2 left-2 text-lg bg-background/90 rounded-full w-8 h-8 inline-flex items-center justify-center shadow">
+                  {c.emoji}
+                </span>
+              </div>
+              <div className="p-3">
+                <h3 className="text-[13px] font-bold leading-snug line-clamp-2">
+                  {c.label}
+                </h3>
+                <p className="text-[11px] text-muted-foreground mt-1">
+                  {c.brands.join(" · ")}
+                </p>
+              </div>
             </Link>
           ))}
         </div>
@@ -160,67 +186,6 @@ function Home() {
               {b}
             </span>
           ))}
-        </div>
-      </section>
-
-      {/* Featured products */}
-      <section className="mx-auto max-w-md px-4 mt-8">
-        <div className="flex items-end justify-between">
-          <h2 className="text-xl font-extrabold">Popular picks</h2>
-          <Link
-            to="/catalog"
-            search={{ cat: "all" }}
-            className="text-xs font-semibold text-primary inline-flex items-center"
-          >
-            See all <ChevronRight className="w-3 h-3" />
-          </Link>
-        </div>
-        <div className="mt-4 grid grid-cols-2 gap-3">
-          {featured.map((p) => {
-            const off = p.mrp ? Math.round(((p.mrp - p.price) / p.mrp) * 100) : 0;
-            return (
-              <Link
-                key={p.id}
-                to="/product/$id"
-                params={{ id: p.id }}
-                className="flex flex-col rounded-2xl bg-card border overflow-hidden shadow-sm active:scale-[0.99] transition"
-              >
-                <div className="relative aspect-square bg-muted">
-                  <img
-                    src={p.img}
-                    alt={p.name}
-                    loading="lazy"
-                    width={800}
-                    height={800}
-                    className="w-full h-full object-cover"
-                  />
-                  {off > 0 && (
-                    <span className="absolute top-2 right-2 text-[10px] font-bold bg-primary text-primary-foreground px-2 py-0.5 rounded-full">
-                      {off}% OFF
-                    </span>
-                  )}
-                </div>
-                <div className="p-3 flex flex-col gap-1">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-primary">
-                    {p.brand}
-                  </div>
-                  <h3 className="text-[13px] font-semibold leading-snug line-clamp-2 min-h-[2.4em]">
-                    {p.name}
-                  </h3>
-                  <div className="mt-1 flex items-baseline gap-1.5">
-                    <span className="text-sm font-extrabold">
-                      ₹{p.price.toLocaleString("en-IN")}
-                    </span>
-                    {p.mrp && (
-                      <span className="text-[11px] text-muted-foreground line-through">
-                        ₹{p.mrp.toLocaleString("en-IN")}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
         </div>
       </section>
 
