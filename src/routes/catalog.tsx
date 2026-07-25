@@ -1,21 +1,16 @@
 import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
-import { Phone, MessageCircle, ArrowLeft, Search } from "lucide-react";
+import { Phone, MessageCircle, ArrowLeft } from "lucide-react";
 import { z } from "zod";
 import {
   BUSINESS,
   CATEGORIES,
-  PRODUCTS,
-  type Category,
+  categoryById,
   telLink,
   waLink,
 } from "@/lib/catalog";
 
 const searchSchema = z.object({
-  cat: z
-    .enum(["all", "mixers", "induction", "kettles", "toasters", "irons", "sandwich", "blenders"])
-    .optional()
-    .catch("all"),
+  cat: z.string().optional().catch(undefined),
 });
 
 export const Route = createFileRoute("/catalog")({
@@ -26,7 +21,7 @@ export const Route = createFileRoute("/catalog")({
       {
         name: "description",
         content:
-          "Browse mixer grinders, induction cooktops, kettles, toasters, irons & more from Sujata, Havells, Prestige, Bajaj and Philips at S P Enterprises, Kanpur.",
+          "Browse juicer mixer grinders, inductions, electric kettles, mosquito rackets and room heaters at S P Enterprises, Kanpur. Call or WhatsApp 7275336699.",
       },
       { property: "og:title", content: "Product Catalog — S P Enterprises" },
       {
@@ -42,18 +37,8 @@ export const Route = createFileRoute("/catalog")({
 });
 
 function Catalog() {
-  const { cat = "all" } = useSearch({ from: "/catalog" });
-  const [q, setQ] = useState("");
-
-  const filtered = useMemo(() => {
-    const term = q.trim().toLowerCase();
-    return PRODUCTS.filter((p) => (cat === "all" ? true : p.category === (cat as Category))).filter(
-      (p) =>
-        !term ||
-        p.name.toLowerCase().includes(term) ||
-        p.brand.toLowerCase().includes(term),
-    );
-  }, [cat, q]);
+  const { cat } = useSearch({ from: "/catalog" });
+  const category = cat ? categoryById(cat) : undefined;
 
   return (
     <div className="min-h-screen bg-background pb-28">
@@ -61,7 +46,8 @@ function Catalog() {
       <header className="sticky top-0 z-40 bg-background/90 backdrop-blur border-b">
         <div className="mx-auto max-w-md px-4 py-3 flex items-center gap-3">
           <Link
-            to="/"
+            to={category ? "/catalog" : "/"}
+            search={category ? {} : undefined}
             className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-secondary text-secondary-foreground"
             aria-label="Back"
           >
@@ -69,7 +55,7 @@ function Catalog() {
           </Link>
           <div className="flex-1 min-w-0">
             <div className="text-base font-extrabold leading-none text-primary truncate">
-              Catalog
+              {category ? category.label : "Catalog"}
             </div>
             <div className="text-[11px] text-muted-foreground mt-0.5 truncate">
               {BUSINESS.name} · Kanpur
@@ -83,106 +69,94 @@ function Catalog() {
             <Phone className="w-4 h-4" />
           </a>
         </div>
+      </header>
 
-        {/* Search */}
-        <div className="mx-auto max-w-md px-4 pb-3">
-          <div className="relative">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <input
-              type="search"
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="Search brand or product"
-              className="w-full h-10 pl-9 pr-3 rounded-xl bg-secondary text-sm outline-none focus:ring-2 focus:ring-primary/30 border"
-            />
-          </div>
-        </div>
-
-        {/* Category chips */}
-        <div className="mx-auto max-w-md pb-3">
-          <div className="flex gap-2 overflow-x-auto px-4 no-scrollbar">
-            {CATEGORIES.map((c) => {
-              const active = cat === c.id;
-              return (
+      <main className="mx-auto max-w-md px-4 pt-5">
+        {!category ? (
+          <>
+            <h1 className="text-xl font-extrabold">Shop by category</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Tap a category to see all available brands.
+            </p>
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              {CATEGORIES.map((c) => (
                 <Link
                   key={c.id}
                   to="/catalog"
                   search={{ cat: c.id }}
-                  className={`shrink-0 inline-flex items-center gap-1.5 px-3 h-9 rounded-full text-xs font-semibold border transition ${
-                    active
-                      ? "bg-primary text-primary-foreground border-primary shadow"
-                      : "bg-card text-foreground border-border"
-                  }`}
-                >
-                  <span>{c.emoji}</span>
-                  <span>{c.label}</span>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </header>
-
-      {/* Grid */}
-      <main className="mx-auto max-w-md px-4 pt-4">
-        {filtered.length === 0 ? (
-          <div className="text-center py-16 text-sm text-muted-foreground">
-            No products match your search.
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 gap-3">
-            {filtered.map((p) => {
-              const off = p.mrp ? Math.round(((p.mrp - p.price) / p.mrp) * 100) : 0;
-              return (
-                <Link
-                  key={p.id}
-                  to="/product/$id"
-                  params={{ id: p.id }}
                   className="group flex flex-col rounded-2xl bg-card border overflow-hidden shadow-sm active:scale-[0.99] transition"
                 >
                   <div className="relative aspect-square bg-muted">
                     <img
-                      src={p.img}
-                      alt={p.name}
+                      src={c.image}
+                      alt={c.label}
                       loading="lazy"
                       width={800}
                       height={800}
                       className="w-full h-full object-cover"
                     />
-                    {p.tag && (
-                      <span className="absolute top-2 left-2 text-[10px] font-bold uppercase tracking-wider bg-accent text-accent-foreground px-2 py-0.5 rounded-full">
-                        {p.tag}
-                      </span>
-                    )}
-                    {off > 0 && (
-                      <span className="absolute top-2 right-2 text-[10px] font-bold bg-primary text-primary-foreground px-2 py-0.5 rounded-full">
-                        {off}% OFF
-                      </span>
-                    )}
+                    <span className="absolute top-2 left-2 text-lg bg-background/90 rounded-full w-8 h-8 inline-flex items-center justify-center shadow">
+                      {c.emoji}
+                    </span>
                   </div>
-                  <div className="p-3 flex flex-col gap-1.5">
-                    <div className="text-[10px] font-bold uppercase tracking-wider text-primary">
-                      {p.brand}
-                    </div>
-                    <h3 className="text-[13px] font-semibold leading-snug line-clamp-2 min-h-[2.4em]">
-                      {p.name}
+                  <div className="p-3">
+                    <h3 className="text-[13px] font-bold leading-snug line-clamp-2">
+                      {c.label}
                     </h3>
-                    <p className="text-[11px] text-muted-foreground line-clamp-1">{p.spec}</p>
-                    <div className="mt-1 flex items-baseline gap-1.5">
-                      <span className="text-sm font-extrabold">
-                        ₹{p.price.toLocaleString("en-IN")}
-                      </span>
-                      {p.mrp && (
-                        <span className="text-[11px] text-muted-foreground line-through">
-                          ₹{p.mrp.toLocaleString("en-IN")}
-                        </span>
-                      )}
-                    </div>
+                    <p className="text-[11px] text-muted-foreground mt-1">
+                      {c.brands.length} brand{c.brands.length > 1 ? "s" : ""} available
+                    </p>
                   </div>
                 </Link>
-              );
-            })}
-          </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
+            <h1 className="text-xl font-extrabold">Available brands</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Choose a brand to enquire about {category.label.toLowerCase()} on WhatsApp.
+            </p>
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              {category.brands.map((b) => {
+                const msg = `Hi S P Enterprises, I'm interested in ${b} ${category.label}. Please share available models, prices and offers.`;
+                return (
+                  <a
+                    key={b}
+                    href={waLink(msg)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex flex-col rounded-2xl bg-card border overflow-hidden shadow-sm active:scale-[0.99] transition"
+                  >
+                    <div className="relative aspect-square bg-muted">
+                      <img
+                        src={category.image}
+                        alt={`${b} ${category.label}`}
+                        loading="lazy"
+                        width={800}
+                        height={800}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-2">
+                        <div className="text-white text-[10px] font-semibold uppercase tracking-wider">
+                          Brand
+                        </div>
+                        <div className="text-white text-base font-extrabold leading-tight">
+                          {b}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="p-3 flex items-center justify-between">
+                      <span className="text-[11px] font-semibold text-primary">
+                        Enquire on WhatsApp
+                      </span>
+                      <MessageCircle className="w-4 h-4 text-[color:var(--color-whatsapp)]" />
+                    </div>
+                  </a>
+                );
+              })}
+            </div>
+          </>
         )}
       </main>
 
@@ -193,7 +167,11 @@ function Catalog() {
       >
         <div className="mx-auto max-w-md px-4 py-3 flex gap-2">
           <a
-            href={waLink("Hi S P Enterprises, I'd like to enquire about your appliances.")}
+            href={waLink(
+              category
+                ? `Hi S P Enterprises, I'd like to enquire about ${category.label}.`
+                : "Hi S P Enterprises, I'd like to enquire about your appliances.",
+            )}
             target="_blank"
             rel="noopener noreferrer"
             className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-[color:var(--color-whatsapp)] text-[color:var(--color-whatsapp-foreground)] font-semibold py-3 text-sm shadow-lg active:scale-[0.98] transition"
