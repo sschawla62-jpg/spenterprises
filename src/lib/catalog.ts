@@ -4,6 +4,12 @@ import induction from "@/assets/induction.jpg";
 import kettle from "@/assets/kettle.jpg";
 import mosquito from "@/assets/mosquito-racket.jpg";
 import heater from "@/assets/room-heater.jpg";
+import sujataMg03 from "@/assets/sujata/mg03.jpg.asset.json";
+import sujataDynamix from "@/assets/sujata/dynamix.jpg.asset.json";
+import sujataCitromatic from "@/assets/sujata/citromatic.jpg.asset.json";
+import sujataJmg from "@/assets/sujata/jmg.jpg.asset.json";
+import sujataFrootmix from "@/assets/sujata/frootmix.jpg.asset.json";
+import sujataSupermix from "@/assets/sujata/supermix.jpg.asset.json";
 
 export type CategoryId =
   | "mixers"
@@ -13,12 +19,29 @@ export type CategoryId =
   | "mosquito-rackets"
   | "room-heaters";
 
+export interface BrandModel {
+  id: string;
+  name: string;
+  image: string;
+  note?: string;
+}
+
+export interface BrandGroup {
+  title: string;
+  models: BrandModel[];
+}
+
+export interface Brand {
+  name: string;
+  groups?: BrandGroup[];
+}
+
 export interface Category {
   id: CategoryId;
   label: string;
   emoji: string;
   image: string;
-  brands: string[];
+  brands: Brand[];
 }
 
 export const CATEGORIES: Category[] = [
@@ -27,42 +50,74 @@ export const CATEGORIES: Category[] = [
     label: "Juicer Mixer Grinders",
     emoji: "🌀",
     image: mixer,
-    brands: ["Sujata"],
+    brands: [
+      {
+        name: "Sujata",
+        groups: [
+          {
+            title: "Mixer Grinders",
+            models: [
+              { id: "mg-01", name: "MG 01", image: sujataMg03.url },
+              { id: "mg-02", name: "MG 02", image: sujataMg03.url },
+              { id: "mg-03", name: "MG 03", image: sujataMg03.url, note: "1000 W" },
+              { id: "dynamix", name: "Dynamix", image: sujataDynamix.url },
+              { id: "citromatic", name: "Citromatic", image: sujataCitromatic.url },
+            ],
+          },
+          {
+            title: "Juicer Mixer Grinders",
+            models: [{ id: "jmg", name: "JMG", image: sujataJmg.url }],
+          },
+          {
+            title: "Blenders",
+            models: [
+              { id: "frootmix", name: "Frootmix", image: sujataFrootmix.url },
+              { id: "supermix", name: "Supermix", image: sujataSupermix.url },
+            ],
+          },
+        ],
+      },
+    ],
   },
   {
     id: "mixer-parts",
     label: "Juicer Mixer Grinder Parts",
     emoji: "🔩",
     image: mixerParts,
-    brands: ["Sujata"],
+    brands: [{ name: "Sujata" }],
   },
   {
     id: "inductions",
     label: "Inductions",
     emoji: "🔥",
     image: induction,
-    brands: ["Prestige", "Pigeon", "Skyline"],
+    brands: [{ name: "Prestige" }, { name: "Pigeon" }, { name: "Skyline" }],
   },
   {
     id: "kettles",
     label: "Electric Kettle",
     emoji: "🫖",
     image: kettle,
-    brands: ["Prestige", "Oreva", "Kelvinator", "Pigeon"],
+    brands: [
+      { name: "Prestige" },
+      { name: "Oreva" },
+      { name: "Kelvinator" },
+      { name: "Pigeon" },
+    ],
   },
   {
     id: "mosquito-rackets",
     label: "Mosquito Rackets",
     emoji: "🦟",
     image: mosquito,
-    brands: ["Licve", "Modern", "Snow White"],
+    brands: [{ name: "Licve" }, { name: "Modern" }, { name: "Snow White" }],
   },
   {
     id: "room-heaters",
     label: "Room Heaters",
     emoji: "♨️",
     image: heater,
-    brands: ["ElectroMax", "Oreva"],
+    brands: [{ name: "ElectroMax" }, { name: "Oreva" }],
   },
 ];
 
