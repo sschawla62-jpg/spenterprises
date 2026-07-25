@@ -7,10 +7,13 @@ import {
   categoryById,
   telLink,
   waLink,
+  type Brand,
+  type Category,
 } from "@/lib/catalog";
 
 const searchSchema = z.object({
   cat: z.string().optional().catch(undefined),
+  brand: z.string().optional().catch(undefined),
 });
 
 export const Route = createFileRoute("/catalog")({
@@ -36,18 +39,48 @@ export const Route = createFileRoute("/catalog")({
   component: Catalog,
 });
 
+function WA({
+  message,
+  className,
+  children,
+}: {
+  message: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  // target="_top" avoids sandboxed-iframe popup blocking in previews.
+  return (
+    <a
+      href={waLink(message)}
+      target="_top"
+      rel="noopener noreferrer"
+      className={className}
+    >
+      {children}
+    </a>
+  );
+}
+
 function Catalog() {
-  const { cat } = useSearch({ from: "/catalog" });
+  const { cat, brand } = useSearch({ from: "/catalog" });
   const category = cat ? categoryById(cat) : undefined;
+  const selectedBrand: Brand | undefined =
+    category && brand ? category.brands.find((b) => b.name === brand) : undefined;
+
+  const backSearch = selectedBrand ? { cat: category!.id } : category ? {} : {};
+  const headerTitle = selectedBrand
+    ? `${selectedBrand.name} · ${category!.label}`
+    : category
+      ? category.label
+      : "Catalog";
 
   return (
     <div className="min-h-screen bg-background pb-28">
-      {/* Header */}
       <header className="sticky top-0 z-40 bg-background/90 backdrop-blur border-b">
         <div className="mx-auto max-w-md px-4 py-3 flex items-center gap-3">
           <Link
             to={category ? "/catalog" : "/"}
-            search={category ? {} : undefined}
+            search={backSearch}
             className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-secondary text-secondary-foreground"
             aria-label="Back"
           >
@@ -55,7 +88,7 @@ function Catalog() {
           </Link>
           <div className="flex-1 min-w-0">
             <div className="text-base font-extrabold leading-none text-primary truncate">
-              {category ? category.label : "Catalog"}
+              {headerTitle}
             </div>
             <div className="text-[11px] text-muted-foreground mt-0.5 truncate">
               {BUSINESS.name} · Kanpur
@@ -72,91 +105,12 @@ function Catalog() {
       </header>
 
       <main className="mx-auto max-w-md px-4 pt-5">
-        {!category ? (
-          <>
-            <h1 className="text-xl font-extrabold">Shop by category</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Tap a category to see all available brands.
-            </p>
-            <div className="mt-4 grid grid-cols-2 gap-3">
-              {CATEGORIES.map((c) => (
-                <Link
-                  key={c.id}
-                  to="/catalog"
-                  search={{ cat: c.id }}
-                  className="group flex flex-col rounded-2xl bg-card border overflow-hidden shadow-sm active:scale-[0.99] transition"
-                >
-                  <div className="relative aspect-square bg-muted">
-                    <img
-                      src={c.image}
-                      alt={c.label}
-                      loading="lazy"
-                      width={800}
-                      height={800}
-                      className="w-full h-full object-cover"
-                    />
-                    <span className="absolute top-2 left-2 text-lg bg-background/90 rounded-full w-8 h-8 inline-flex items-center justify-center shadow">
-                      {c.emoji}
-                    </span>
-                  </div>
-                  <div className="p-3">
-                    <h3 className="text-[13px] font-bold leading-snug line-clamp-2">
-                      {c.label}
-                    </h3>
-                    <p className="text-[11px] text-muted-foreground mt-1">
-                      {c.brands.length} brand{c.brands.length > 1 ? "s" : ""} available
-                    </p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </>
+        {selectedBrand ? (
+          <BrandView category={category!} brand={selectedBrand} />
+        ) : category ? (
+          <CategoryView category={category} />
         ) : (
-          <>
-            <h1 className="text-xl font-extrabold">Available brands</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Choose a brand to enquire about {category.label.toLowerCase()} on WhatsApp.
-            </p>
-            <div className="mt-4 grid grid-cols-2 gap-3">
-              {category.brands.map((b) => {
-                const msg = `Hi S P Enterprises, I'm interested in ${b} ${category.label}. Please share available models, prices and offers.`;
-                return (
-                  <a
-                    key={b}
-                    href={waLink(msg)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex flex-col rounded-2xl bg-card border overflow-hidden shadow-sm active:scale-[0.99] transition"
-                  >
-                    <div className="relative aspect-square bg-muted">
-                      <img
-                        src={category.image}
-                        alt={`${b} ${category.label}`}
-                        loading="lazy"
-                        width={800}
-                        height={800}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-2">
-                        <div className="text-white text-[10px] font-semibold uppercase tracking-wider">
-                          Brand
-                        </div>
-                        <div className="text-white text-base font-extrabold leading-tight">
-                          {b}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="p-3 flex items-center justify-between">
-                      <span className="text-[11px] font-semibold text-primary">
-                        Enquire on WhatsApp
-                      </span>
-                      <MessageCircle className="w-4 h-4 text-[color:var(--color-whatsapp)]" />
-                    </div>
-                  </a>
-                );
-              })}
-            </div>
-          </>
+          <AllCategoriesView />
         )}
       </main>
 
@@ -166,18 +120,18 @@ function Catalog() {
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         <div className="mx-auto max-w-md px-4 py-3 flex gap-2">
-          <a
-            href={waLink(
-              category
-                ? `Hi S P Enterprises, I'd like to enquire about ${category.label}.`
-                : "Hi S P Enterprises, I'd like to enquire about your appliances.",
-            )}
-            target="_blank"
-            rel="noopener noreferrer"
+          <WA
+            message={
+              selectedBrand
+                ? `Hi S P Enterprises, I'd like to enquire about ${selectedBrand.name} ${category!.label}.`
+                : category
+                  ? `Hi S P Enterprises, I'd like to enquire about ${category.label}.`
+                  : "Hi S P Enterprises, I'd like to enquire about your appliances."
+            }
             className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-[color:var(--color-whatsapp)] text-[color:var(--color-whatsapp-foreground)] font-semibold py-3 text-sm shadow-lg active:scale-[0.98] transition"
           >
             <MessageCircle className="w-5 h-5" /> WhatsApp
-          </a>
+          </WA>
           <a
             href={telLink()}
             className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground font-semibold py-3 text-sm shadow-lg active:scale-[0.98] transition"
@@ -187,5 +141,157 @@ function Catalog() {
         </div>
       </nav>
     </div>
+  );
+}
+
+function AllCategoriesView() {
+  return (
+    <>
+      <h1 className="text-xl font-extrabold">Shop by category</h1>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Tap a category to see all available brands.
+      </p>
+      <div className="mt-4 grid grid-cols-2 gap-3">
+        {CATEGORIES.map((c) => (
+          <Link
+            key={c.id}
+            to="/catalog"
+            search={{ cat: c.id }}
+            className="flex flex-col rounded-2xl bg-card border overflow-hidden shadow-sm active:scale-[0.99] transition"
+          >
+            <div className="relative aspect-square bg-muted">
+              <img
+                src={c.image}
+                alt={c.label}
+                loading="lazy"
+                width={800}
+                height={800}
+                className="w-full h-full object-cover"
+              />
+              <span className="absolute top-2 left-2 text-lg bg-background/90 rounded-full w-8 h-8 inline-flex items-center justify-center shadow">
+                {c.emoji}
+              </span>
+            </div>
+            <div className="p-3">
+              <h3 className="text-[13px] font-bold leading-snug line-clamp-2">{c.label}</h3>
+              <p className="text-[11px] text-muted-foreground mt-1">
+                {c.brands.map((b) => b.name).join(" · ")}
+              </p>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </>
+  );
+}
+
+function CategoryView({ category }: { category: Category }) {
+  return (
+    <>
+      <h1 className="text-xl font-extrabold">Available brands</h1>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Choose a brand to see models or enquire on WhatsApp.
+      </p>
+      <div className="mt-4 grid grid-cols-2 gap-3">
+        {category.brands.map((b) => {
+          const hasModels = !!b.groups?.length;
+          const tile = (
+            <div className="flex flex-col rounded-2xl bg-card border overflow-hidden shadow-sm active:scale-[0.99] transition">
+              <div className="relative aspect-square bg-muted">
+                <img
+                  src={category.image}
+                  alt={`${b.name} ${category.label}`}
+                  loading="lazy"
+                  width={800}
+                  height={800}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-2">
+                  <div className="text-white text-[10px] font-semibold uppercase tracking-wider">
+                    Brand
+                  </div>
+                  <div className="text-white text-base font-extrabold leading-tight">
+                    {b.name}
+                  </div>
+                </div>
+              </div>
+              <div className="p-3 flex items-center justify-between">
+                <span className="text-[11px] font-semibold text-primary">
+                  {hasModels ? "View models" : "Enquire on WhatsApp"}
+                </span>
+                <MessageCircle
+                  className={`w-4 h-4 ${hasModels ? "text-primary" : "text-[color:var(--color-whatsapp)]"}`}
+                />
+              </div>
+            </div>
+          );
+          return hasModels ? (
+            <Link
+              key={b.name}
+              to="/catalog"
+              search={{ cat: category.id, brand: b.name }}
+            >
+              {tile}
+            </Link>
+          ) : (
+            <WA
+              key={b.name}
+              message={`Hi S P Enterprises, I'm interested in ${b.name} ${category.label}. Please share available models, prices and offers.`}
+            >
+              {tile}
+            </WA>
+          );
+        })}
+      </div>
+    </>
+  );
+}
+
+function BrandView({ category, brand }: { category: Category; brand: Brand }) {
+  return (
+    <>
+      <h1 className="text-xl font-extrabold">{brand.name} models</h1>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Tap any model to enquire on WhatsApp for price & availability.
+      </p>
+      <div className="mt-5 space-y-6">
+        {brand.groups!.map((g) => (
+          <section key={g.title}>
+            <h2 className="text-sm font-bold uppercase tracking-wider text-foreground/80">
+              {g.title}
+            </h2>
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              {g.models.map((m) => (
+                <WA
+                  key={m.id}
+                  message={`Hi S P Enterprises, I'd like to know the price of ${brand.name} ${m.name}${m.note ? ` (${m.note})` : ""}.`}
+                  className="flex flex-col rounded-2xl bg-card border overflow-hidden shadow-sm active:scale-[0.99] transition"
+                >
+                  <div className="relative aspect-square bg-white">
+                    <img
+                      src={m.image}
+                      alt={`${brand.name} ${m.name}`}
+                      loading="lazy"
+                      width={800}
+                      height={800}
+                      className="w-full h-full object-contain p-2"
+                    />
+                  </div>
+                  <div className="p-3">
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-primary">
+                      {brand.name}
+                    </div>
+                    <h3 className="text-[13px] font-bold leading-snug">{m.name}</h3>
+                    {m.note && (
+                      <p className="text-[11px] text-muted-foreground mt-0.5">{m.note}</p>
+                    )}
+                  </div>
+                </WA>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+    </>
   );
 }

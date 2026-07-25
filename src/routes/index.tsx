@@ -88,7 +88,7 @@ function Home() {
             <div className="mt-4 flex gap-2">
               <a
                 href={waLink(WA_MSG)}
-                target="_blank"
+                target="_top"
                 rel="noopener noreferrer"
                 className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-[color:var(--color-whatsapp)] text-[color:var(--color-whatsapp-foreground)] font-semibold py-3 text-sm shadow active:scale-[0.98] transition"
               >
@@ -196,7 +196,7 @@ function Home() {
           <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{BUSINESS.address}</p>
           <a
             href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(BUSINESS.name + " " + BUSINESS.address)}`}
-            target="_blank"
+            target="_top"
             rel="noopener noreferrer"
             className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary"
           >
@@ -216,7 +216,7 @@ function Home() {
         <div className="mx-auto max-w-md px-4 py-3 flex gap-2">
           <a
             href={waLink(WA_MSG)}
-            target="_blank"
+            target="_top"
             rel="noopener noreferrer"
             className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-[color:var(--color-whatsapp)] text-[color:var(--color-whatsapp-foreground)] font-semibold py-3 text-sm shadow-lg active:scale-[0.98] transition"
           >
