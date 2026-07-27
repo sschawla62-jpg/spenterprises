@@ -197,23 +197,36 @@ function CategoryView({ category }: { category: Category }) {
           const hasModels = !!b.groups?.length;
           const tile = (
             <div className="flex flex-col rounded-2xl bg-card border overflow-hidden shadow-sm active:scale-[0.99] transition">
-              <div className="relative aspect-square bg-muted">
-                <img
-                  src={category.image}
-                  alt={`${b.name} ${category.label}`}
-                  loading="lazy"
-                  width={800}
-                  height={800}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-2">
-                  <div className="text-white text-[10px] font-semibold uppercase tracking-wider">
-                    Brand
-                  </div>
-                  <div className="text-white text-base font-extrabold leading-tight">
-                    {b.name}
-                  </div>
-                </div>
+              <div className="relative aspect-square bg-white flex items-center justify-center p-4">
+                {b.logo ? (
+                  <img
+                    src={b.logo}
+                    alt={`${b.name} logo`}
+                    loading="lazy"
+                    width={400}
+                    height={400}
+                    className="max-w-full max-h-full object-contain"
+                  />
+                ) : (
+                  <>
+                    <img
+                      src={category.image}
+                      alt={`${b.name} ${category.label}`}
+                      loading="lazy"
+                      width={800}
+                      height={800}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-2">
+                      <div className="text-white text-[10px] font-semibold uppercase tracking-wider">
+                        Brand
+                      </div>
+                      <div className="text-white text-base font-extrabold leading-tight">
+                        {b.name}
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
               <div className="p-3 flex items-center justify-between">
                 <span className="text-[11px] font-semibold text-primary">
@@ -250,6 +263,15 @@ function CategoryView({ category }: { category: Category }) {
 function BrandView({ category, brand }: { category: Category; brand: Brand }) {
   return (
     <>
+      {brand.logo && (
+        <div className="flex items-center justify-center py-4 mb-2 bg-white rounded-2xl border">
+          <img
+            src={brand.logo}
+            alt={`${brand.name} logo`}
+            className="h-14 object-contain"
+          />
+        </div>
+      )}
       <h1 className="text-xl font-extrabold">{brand.name} models</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         Tap any model to enquire on WhatsApp for price & availability.

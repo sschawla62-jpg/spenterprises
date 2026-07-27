@@ -10,6 +10,7 @@ import sujataCitromatic from "@/assets/sujata/citromatic.jpg.asset.json";
 import sujataJmg from "@/assets/sujata/jmg.jpg.asset.json";
 import sujataFrootmix from "@/assets/sujata/frootmix.jpg.asset.json";
 import sujataSupermix from "@/assets/sujata/supermix.jpg.asset.json";
+import sujataLogo from "@/assets/sujata/sujata-logo.jpg.asset.json";
 
 export type CategoryId =
   | "mixers"
@@ -33,6 +34,7 @@ export interface BrandGroup {
 
 export interface Brand {
   name: string;
+  logo?: string;
   groups?: BrandGroup[];
 }
 
@@ -53,6 +55,7 @@ export const CATEGORIES: Category[] = [
     brands: [
       {
         name: "Sujata",
+        logo: sujataLogo.url,
         groups: [
           {
             title: "Mixer Grinders",
@@ -84,7 +87,7 @@ export const CATEGORIES: Category[] = [
     label: "Juicer Mixer Grinder Parts",
     emoji: "🔩",
     image: mixerParts,
-    brands: [{ name: "Sujata" }],
+    brands: [{ name: "Sujata", logo: sujataLogo.url }],
   },
   {
     id: "inductions",
