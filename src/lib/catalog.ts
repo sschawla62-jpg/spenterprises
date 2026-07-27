@@ -5,6 +5,7 @@ import kettle from "@/assets/kettle.jpg";
 import mosquito from "@/assets/mosquito-racket.jpg";
 import heater from "@/assets/room-heater.jpg";
 import sujataMg03 from "@/assets/sujata/mg03.jpg.asset.json";
+import sujataMg01 from "@/assets/sujata/mg01.jpg.asset.json";
 import sujataDynamix from "@/assets/sujata/dynamix.jpg.asset.json";
 import sujataCitromatic from "@/assets/sujata/citromatic.jpg.asset.json";
 import sujataJmg from "@/assets/sujata/jmg.jpg.asset.json";
@@ -60,7 +61,7 @@ export const CATEGORIES: Category[] = [
           {
             title: "Mixer Grinders",
             models: [
-              { id: "mg-01", name: "MG 01", image: sujataMg03.url },
+              { id: "mg-01", name: "MG 01", image: sujataMg01.url, note: "1000 W" },
               { id: "mg-02", name: "MG 02", image: sujataMg03.url },
               { id: "mg-03", name: "MG 03", image: sujataMg03.url, note: "1000 W" },
               { id: "dynamix", name: "Dynamix", image: sujataDynamix.url },
