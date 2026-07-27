@@ -238,16 +238,6 @@ function CategoryView({ category }: { category: Category }) {
               </div>
             </div>
           );
-              <div className="p-3 flex items-center justify-between">
-                <span className="text-[11px] font-semibold text-primary">
-                  {hasModels ? "View models" : "Enquire on WhatsApp"}
-                </span>
-                <MessageCircle
-                  className={`w-4 h-4 ${hasModels ? "text-primary" : "text-[color:var(--color-whatsapp)]"}`}
-                />
-              </div>
-            </div>
-          );
           return hasModels ? (
             <Link
               key={b.name}
