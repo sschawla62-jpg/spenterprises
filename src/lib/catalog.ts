@@ -13,6 +13,12 @@ import sujataJmg from "@/assets/sujata/jmg.jpg.asset.json";
 import sujataFrootmix from "@/assets/sujata/frootmix.jpg.asset.json";
 import sujataSupermix from "@/assets/sujata/supermix.jpg.asset.json";
 import sujataLogo from "@/assets/sujata/sujata-logo.jpg.asset.json";
+import prestigeLogo from "@/assets/brands/prestige.webp.asset.json";
+import pigeonLogo from "@/assets/brands/pigeon.png.asset.json";
+import skylineLogo from "@/assets/brands/skyline.webp.asset.json";
+import orevaLogo from "@/assets/brands/oreva.png.asset.json";
+import kelvinatorLogo from "@/assets/brands/kelvinator.svg.asset.json";
+import electromaxLogo from "@/assets/brands/electromax.png.asset.json";
 
 export type CategoryId =
   | "mixers"
@@ -96,7 +102,11 @@ export const CATEGORIES: Category[] = [
     label: "Inductions",
     emoji: "🔥",
     image: induction,
-    brands: [{ name: "Prestige" }, { name: "Pigeon" }, { name: "Skyline" }],
+    brands: [
+      { name: "Prestige", logo: prestigeLogo.url },
+      { name: "Pigeon", logo: pigeonLogo.url },
+      { name: "Skyline", logo: skylineLogo.url },
+    ],
   },
   {
     id: "kettles",
@@ -104,10 +114,10 @@ export const CATEGORIES: Category[] = [
     emoji: "🫖",
     image: kettle,
     brands: [
-      { name: "Prestige" },
-      { name: "Oreva" },
-      { name: "Kelvinator" },
-      { name: "Pigeon" },
+      { name: "Prestige", logo: prestigeLogo.url },
+      { name: "Oreva", logo: orevaLogo.url },
+      { name: "Kelvinator", logo: kelvinatorLogo.url },
+      { name: "Pigeon", logo: pigeonLogo.url },
     ],
   },
   {
@@ -122,7 +132,10 @@ export const CATEGORIES: Category[] = [
     label: "Room Heaters",
     emoji: "♨️",
     image: heater,
-    brands: [{ name: "ElectroMax" }, { name: "Oreva" }],
+    brands: [
+      { name: "ElectroMax", logo: electromaxLogo.url },
+      { name: "Oreva", logo: orevaLogo.url },
+    ],
   },
 ];
 
