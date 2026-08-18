@@ -12,12 +12,12 @@ import sujataCitromatic from "@/assets/sujata/citromatic.jpg.asset.json";
 import sujataJmg from "@/assets/sujata/jmg.jpg.asset.json";
 import sujataFrootmix from "@/assets/sujata/frootmix.jpg.asset.json";
 import sujataSupermix from "@/assets/sujata/supermix.jpg.asset.json";
-import sujataLogo from "@/assets/sujata/sujata-logo.jpg.asset.json";
-import prestigeLogo from "@/assets/brands/prestige.webp.asset.json";
+import sujataLogo from "@/assets/brands/sujata.png.asset.json";
+import prestigeLogo from "@/assets/brands/prestige.png.asset.json";
 import pigeonLogo from "@/assets/brands/pigeon.png.asset.json";
-import skylineLogo from "@/assets/brands/skyline.webp.asset.json";
+import skylineLogo from "@/assets/brands/skyline.png.asset.json";
 import orevaLogo from "@/assets/brands/oreva.png.asset.json";
-import kelvinatorLogo from "@/assets/brands/kelvinator.svg.asset.json";
+import kelvinatorLogo from "@/assets/brands/kelvinator.png.asset.json";
 import electromaxLogo from "@/assets/brands/electromax.png.asset.json";
 
 export type CategoryId =
