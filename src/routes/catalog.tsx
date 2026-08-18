@@ -229,12 +229,10 @@ function CategoryView({ category }: { category: Category }) {
                 )}
               </div>
               <div className="p-3 flex items-center justify-between">
-                <span className="text-[11px] font-semibold text-primary">
-                  {hasModels ? "View models" : "Enquire on WhatsApp"}
+                <span className="text-[13px] font-bold text-foreground">
+                  {b.name}
                 </span>
-                <MessageCircle
-                  className={`w-4 h-4 ${hasModels ? "text-primary" : "text-[color:var(--color-whatsapp)]"}`}
-                />
+                <MessageCircle className="w-4 h-4 text-[color:var(--color-whatsapp)]" />
               </div>
             </div>
           );
