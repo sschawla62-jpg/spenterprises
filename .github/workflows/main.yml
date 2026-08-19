@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Bun/Node
-        uses: oven-sh/setup-bun@v1 # Or use node setup if using npm
+        uses: oven-sh/setup-bun@v1
 
       - name: Install dependencies & Build
         run: |
@@ -28,7 +28,8 @@ jobs:
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
-        path: ./dist # Change to './build' or './out' depending on where your project outputs its production build
+        with:
+          path: ./dist
 
       - name: Deploy to GitHub Pages
         id: deployment
