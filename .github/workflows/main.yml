@@ -22,6 +22,8 @@ jobs:
         run: |
           bun install
           bun run build
+        env:
+          NODE_ENV: production
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -29,7 +31,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./.output/public
+          path: ./dist
 
       - name: Deploy to GitHub Pages
         id: deployment
